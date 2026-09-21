@@ -8,7 +8,7 @@
 
 - 项目名称：Moon Digest Fields
 - GitHub：https://github.com/HaQiLyner/moon-digest-fields
-- MoonCakes：发布后填写 `HaQiLyner/moon_digest_fields@0.1.0` 的实际链接
+- MoonCakes：[`HaQiLyner/moon_digest_fields@0.1.0`](https://mooncakes.io/api/v0/modules/HaQiLyner/moon_digest_fields)
 - 许可证：Apache-2.0
 
 ## 2. 项目简介（请本人改写）

@@ -19,6 +19,10 @@ MoonBit 实现的 RFC 9530 HTTP Digest Fields 工具库，用于生成、解析�
 
 ## 快速开始
 
+```sh
+moon add HaQiLyner/moon_digest_fields@0.1.0
+```
+
 ```moonbit nocheck
 let body = @base64.str2bytes("{\"hello\": \"world\"}\n")
 let field = @digest.content_digest_sha256(body)
@@ -58,6 +62,7 @@ Signatures、SHA-512 计算、内容编码解压或媒体格式规范化。调�
 - [场景验证与复现](docs/scenario-validation.md)
 - [来源、依赖与许可证](docs/provenance.md)
 - [开发路线图](docs/roadmap.md)
+- [0.1.0 发布验证](docs/release-verification.md)
 - [申报书事实底稿（参赛者需亲自改写）](docs/proposal.md)
 
 ## 许可证
