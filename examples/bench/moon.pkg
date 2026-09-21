@@ -1,0 +1,7 @@
+import {
+  "HaQiLyner/moon_digest_fields" @digest,
+  "gmlewis/base64",
+  "moonbitlang/core/env",
+}
+
+pkgtype(kind: "executable")
