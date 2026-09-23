@@ -1,4 +1,13 @@
-# 0.1.0 发布验证
+# 发布验证
+
+## 0.2.0（2026-09-23）
+
+使用 MoonCakes 账号 `HaQiLyner` 发布，服务器返回 `200 OK`。随后使用另一份
+MoonCakes 配置在全新模块中下载 `HaQiLyner/moon_digest_fields@0.2.0`，仅通过
+公开 API 为含零字节正文设置 SHA-256/SHA-512 双摘要 HTTP 头并验证，JavaScript
+和 wasm-gc 均为 1/1 测试通过。
+
+## 0.1.0（2026-09-21）
 
 2026-09-21 使用 MoonCakes 账号 `HaQiLyner` 发布 0.1.0，服务器返回 `200 OK`。
 公开注册表接口：
