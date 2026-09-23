@@ -5,19 +5,19 @@ fn main raise {
   let body = @base64.str2bytes(
     "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
   )
-  let field = @digest.content_digest_sha256(body)
-  let policy = @digest.VerificationPolicy::default()
+  let message = @digest.apply_digest_header(
+    {
+      headers: [{ name: "Content-Type", value: "application/octet-stream", }],
+      body,
+    },
+    @digest.Content,
+  )
   let iterations = 20_000
   let started = @env.now()
   let mut verified = 0
   for i = 0; i < iterations; i = i + 1 {
-    let result = @digest.verify_digest_field(
-      @digest.Content,
-      field,
-      body,
-      policy,
-    )
-    if result.decision == @digest.Verified {
+    let result = @digest.verify_http_message(message, @digest.Content)
+    if result.verification.decision == @digest.Verified {
       verified += 1
     }
   }
@@ -28,6 +28,6 @@ fn main raise {
     0UL
   }
   println(
-    "verified \{verified}/\{iterations} records in \{elapsed_ms} ms (\{per_second} records/s)",
+    "verified \{verified}/\{iterations} dual-digest HTTP messages in \{elapsed_ms} ms (\{per_second} messages/s)",
   )
 }
