@@ -1,4 +1,16 @@
 ///|
+fn compute_supported_digest(
+  algorithm : String,
+  body : Bytes,
+) -> Bytes? raise DigestFieldError {
+  match algorithm {
+    "sha-256" => Some(sha256(body))
+    "sha-512" => Some(sha512(body))
+    _ => None
+  }
+}
+
+///|
 /// Verify a parsed Content-Digest or Repr-Digest value against body bytes.
 pub fn verify_digest(
   target : IntegrityTarget,
@@ -30,17 +42,6 @@ pub fn verify_digest(
   let mut ignored = 0
   let mut matched = 0
   let mut last_algorithm = ""
-  let actual = sha256(body) catch {
-    _ =>
-      return {
-        target,
-        decision: InvalidField,
-        algorithm: "",
-        code: "DIGEST_FAILURE",
-        checked: 0,
-        ignored: 0,
-      }
-  }
   for item in field.members {
     let algorithm = ascii_lower(item.algorithm)
     match algorithm_status(algorithm) {
@@ -59,13 +60,24 @@ pub fn verify_digest(
       ignored += 1
       continue
     }
-    if algorithm != "sha-256" {
+    let actual = compute_supported_digest(algorithm, body) catch {
+      _ =>
+        return {
+          target,
+          decision: InvalidField,
+          algorithm,
+          code: "DIGEST_FAILURE",
+          checked,
+          ignored,
+        }
+    }
+    guard actual is Some(actual_digest) else {
       ignored += 1
       continue
     }
     checked += 1
     last_algorithm = algorithm
-    if bytes_equal_constant_time(actual, item.value) {
+    if bytes_equal_constant_time(actual_digest, item.value) {
       matched += 1
     } else if policy.require_all_supported {
       return {

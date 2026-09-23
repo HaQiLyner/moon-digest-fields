@@ -34,6 +34,39 @@ test "streaming chunks equal one-shot digest" {
 }
 
 ///|
+test "SHA-512 matches NIST abc vector and preserves zero bytes" {
+  assert_eq(
+    content_digest_sha512(@base64.str2bytes("abc")),
+    "sha-512=:3a81oZNherrMQXNJriBBMRLm+k6JqX6iCp7u5ktV05ohkpkqJ0/BqDa6PCOj/uu9RU1EI2Q86A4qmslPpUyknw==:",
+  )
+  let binary = Bytes::from_array([
+    (0 : Int).to_byte(),
+    (1 : Int).to_byte(),
+    (0 : Int).to_byte(),
+    (2 : Int).to_byte(),
+  ])
+  assert_eq(
+    content_digest_sha512(binary),
+    "sha-512=:0bIBNdMconztbmp1OFFaPse7XHXihn5wguXGvXm3pY59V6bYyuwm2hD7kjS/NgSPE/e6t7R0WUC0DGhyiDLpAA==:",
+  )
+}
+
+///|
+test "multi-algorithm generation verifies both active algorithms" {
+  let body = @base64.str2bytes("artifact")
+  let field = digest_field_for(body, ["sha-512", "sha-256"])
+  assert_eq(field.members.length(), 2)
+  let result = verify_digest(
+    Content,
+    field,
+    body,
+    VerificationPolicy::default(),
+  )
+  assert_eq(result.decision, Verified)
+  assert_eq(result.checked, 2)
+}
+
+///|
 test "digest dictionaries canonicalize order and whitespace" {
   assert_eq(
     canonicalize_digest_field(" zed=:AA==:, sha-256=:AQI=: "),

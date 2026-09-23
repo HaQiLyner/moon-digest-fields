@@ -1,5 +1,6 @@
 import {
   "gmlewis/sha256",
   "gmlewis/base64",
+  "Tigls/mb-hash/sha2",
   "moonbitlang/core/debug",
 }

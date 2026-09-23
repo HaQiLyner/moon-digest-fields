@@ -87,7 +87,7 @@ pub(all) struct VerificationPolicy {
 ///|
 pub fn VerificationPolicy::default() -> VerificationPolicy {
   {
-    allowed_algorithms: ["sha-256"],
+    allowed_algorithms: ["sha-256", "sha-512"],
     reject_deprecated: true,
     require_all_supported: true,
     max_body_bytes: 16 * 1024 * 1024,

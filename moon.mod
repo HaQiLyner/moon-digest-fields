@@ -28,4 +28,5 @@ description = "RFC 9530 HTTP Digest Fields parsing, SHA-256 generation, verifica
 import {
   "gmlewis/sha256@0.17.33",
   "gmlewis/base64@0.16.12",
+  "Tigls/mb-hash@0.1.0",
 }
