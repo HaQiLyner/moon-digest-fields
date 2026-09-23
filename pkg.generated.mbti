@@ -2,12 +2,15 @@
 package "HaQiLyner/moon_digest_fields"
 
 import {
+  "Tigls/mb-hash/sha2",
   "gmlewis/sha256",
   "moonbitlang/core/debug",
 }
 
 // Values
 pub fn algorithm_status(String) -> AlgorithmStatus
+
+pub fn apply_digest_header(HttpMessage, IntegrityTarget, algorithms? : Array[String]) -> HttpMessage raise DigestFieldError
 
 pub fn audit_entries(Array[AuditEntry], VerificationPolicy) -> AuditReport
 
@@ -17,7 +20,13 @@ pub fn canonicalize_preference_field(String) -> String raise DigestFieldError
 
 pub fn content_digest_sha256(Bytes) -> String raise DigestFieldError
 
+pub fn content_digest_sha512(Bytes) -> String raise DigestFieldError
+
+pub fn digest_field_for(Bytes, Array[String]) -> DigestField raise DigestFieldError
+
 pub fn negotiate_digest_algorithm(PreferenceField, Array[String]) -> NegotiationResult
+
+pub fn negotiate_http_digest(Array[HttpHeader], IntegrityTarget, supported? : Array[String]) -> NegotiationResult raise DigestFieldError
 
 pub fn parse_digest_field(String) -> DigestField raise DigestFieldError
 
@@ -29,9 +38,17 @@ pub fn sha256_digest_field(Bytes) -> DigestField raise DigestFieldError
 
 pub fn sha256_utf8(String) -> Bytes raise DigestFieldError
 
+pub fn sha512(Bytes) -> Bytes raise DigestFieldError
+
+pub fn sha512_digest_field(Bytes) -> DigestField raise DigestFieldError
+
+pub fn sha512_utf8(String) -> Bytes raise DigestFieldError
+
 pub fn verify_digest(IntegrityTarget, DigestField, Bytes, VerificationPolicy) -> Verification
 
 pub fn verify_digest_field(IntegrityTarget, String, Bytes, VerificationPolicy) -> Verification
+
+pub fn verify_http_message(HttpMessage, IntegrityTarget, policy? : VerificationPolicy) -> HttpIntegrityResult
 
 // Errors
 pub(all) suberror DigestFieldError {
@@ -83,6 +100,23 @@ pub(all) struct DigestMember {
   value : Bytes
 } derive(Eq, @debug.Debug)
 
+pub(all) struct HttpHeader {
+  name : String
+  value : String
+} derive(Eq, @debug.Debug)
+
+pub(all) struct HttpIntegrityResult {
+  field_name : String
+  combined_value : String
+  occurrences : Int
+  verification : Verification
+} derive(Eq, @debug.Debug)
+
+pub(all) struct HttpMessage {
+  headers : Array[HttpHeader]
+  body : Bytes
+} derive(Eq, @debug.Debug)
+
 pub(all) enum IntegrityTarget {
   Content
   Representation
@@ -113,6 +147,15 @@ pub(all) struct Sha256Stream {
 pub fn Sha256Stream::finish(Self) -> Bytes raise DigestFieldError
 pub fn Sha256Stream::new() -> Self
 pub fn Sha256Stream::update(Self, Bytes) -> Unit raise DigestFieldError
+
+pub(all) struct Sha512Stream {
+  inner : @sha2.Sha512
+  mut bytes_written : Int
+  mut finalized : Bool
+}
+pub fn Sha512Stream::finish(Self) -> Bytes raise DigestFieldError
+pub fn Sha512Stream::new() -> Self
+pub fn Sha512Stream::update(Self, Bytes) -> Unit raise DigestFieldError
 
 pub(all) struct Verification {
   target : IntegrityTarget

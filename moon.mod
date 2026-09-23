@@ -11,7 +11,7 @@
 
 name = "HaQiLyner/moon_digest_fields"
 
-version = "0.1.0"
+version = "0.2.0"
 
 readme = "README.md"
 
@@ -23,7 +23,7 @@ keywords = [ "http", "digest", "rfc9530", "integrity" ]
 
 preferred_target = "wasm"
 
-description = "RFC 9530 HTTP Digest Fields parsing, SHA-256 generation, verification, negotiation, and audit toolkit"
+description = "RFC 9530 SHA-256/SHA-512 digest generation, HTTP header integration, negotiation, verification, and audit"
 
 import {
   "gmlewis/sha256@0.17.33",
